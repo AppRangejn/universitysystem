@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./docker/php
+    container_name: university-backend
+    volumes:
+      - ./src/backend:/var/www/html
+    depends_on:
+      - db
+      - redis
+    networks:
+      - university
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8081
+
+  frontend:
+    image: node:20
+    container_name: university-frontend
+    working_dir: /app
+    volumes:
+      - ./src/frontend:/app
+    command: sh -c "npm install && npm run build"
+    networks:
+      - university
+
+  web:
+    image: nginx:latest
+    container_name: university-nginx
+    ports:
+      - "8081:80"
+    volumes:
+      - ./src/backend:/var/www/html
+      - ./src/frontend/dist:/var/www/html/frontend
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - university
+
+  db:
+    image: postgres:15-alpine
+    container_name: university-db
+    environment:
+      POSTGRES_DB: university
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - university
+
+  redis:
+    image: redis:alpine
+    container_name: university-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - university
+
+volumes:
+  pgdata:
+
+networks:
+  university:
