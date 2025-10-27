@@ -1,5 +1,14 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-slate-900 text-white text-3xl">
-    Tailwind v4 працює ✅
-  </div>
+  <router-view />
 </template>
+
+<script setup>
+</script>
+
+<style>
+/* Можеш лишити фон, якщо хочеш, щоб усі сторінки мали один фон */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+</style>
