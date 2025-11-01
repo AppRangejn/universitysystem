@@ -19,6 +19,7 @@ import ProfilePage from "@/pages/Profile/ProfilePage.vue";
 import LoginPage from "@/pages/Auth/LoginPage.vue";
 import RegisterPage from "@/pages/Auth/RegisterPage.vue";
 
+
 const routes = [
   // --- Основний layout ---
   {
@@ -29,26 +30,31 @@ const routes = [
         path: "",
         name: "home",
         component: HomePage,
+        meta: { title: "Головна — GitHub Університет" },
       },
       {
         path: "schedule",
         name: "schedule",
         component: SchedulePage,
+        meta: { title: "Розклад — GitHub Університет" },
         children: [
           {
             path: "student",
             name: "student-schedule",
             component: StudentSchedule,
+            meta: { title: "Розклад студента — GitHub Університет" },
           },
           {
             path: "teacher",
             name: "teacher-schedule",
             component: TeacherSchedule,
+            meta: { title: "Розклад викладача — GitHub Університет" },
           },
           {
             path: "admin",
             name: "admin-schedule",
             component: AdminSchedule,
+            meta: { title: "Адмін панель — GitHub Університет" },
           },
         ],
       },
@@ -56,6 +62,7 @@ const routes = [
         path: "profile",
         name: "profile",
         component: ProfilePage,
+        meta: { title: "Профіль — GitHub Університет" },
       },
     ],
   },
@@ -65,11 +72,13 @@ const routes = [
     path: "/login",
     name: "login",
     component: LoginPage,
+    meta: { title: "Вхід — GitHub Університет" },
   },
   {
     path: "/register",
     name: "register",
-    component: RegisterPage,
+    component: () => import("@/pages/Auth/RegisterPage.vue"),
+    meta: { title: "Реєстрація — GitHub Університет" },
   },
 
   // --- 404 ---
@@ -85,6 +94,11 @@ const router = createRouter({
   scrollBehavior() {
     return { top: 0 };
   },
+});
+
+// 🧭 Динамічна зміна заголовка сторінки
+router.afterEach((to) => {
+  document.title = to.meta.title || "GitHub Університет";
 });
 
 export default router;

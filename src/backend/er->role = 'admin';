@@ -1,0 +1,16 @@
+[90m= [39m[34;4mApp\Models\User[39;24m {#6057
+    [34mid[39m: [35m2[39m,
+    [34msurname[39m: "[32mБричковський[39m",
+    [34mname[39m: "[32mКІріл[39m",
+    [34mpatronymic[39m: [36mnull[39m,
+    [34memail[39m: "[32mkiril03202ua@gmail.com[39m",
+    [34mphone[39m: [36mnull[39m,
+    [34mphoto[39m: [36mnull[39m,
+    [34mrole[39m: "[32mguest[39m",
+    [34memail_verified_at[39m: [36mnull[39m,
+    #[33mpassword[39m: "[32m$2y$12$ReYuftXjsANHsYYWsgCUVebUPJvqC2ojH4UaoDAGAANM7EcH/HFhS[39m",
+    #[33mremember_token[39m: [36mnull[39m,
+    [34mcreated_at[39m: "[32m2025-11-01 14:24:08[39m",
+    [34mupdated_at[39m: "[32m2025-11-01 14:24:08[39m",
+  }
+

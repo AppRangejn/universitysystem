@@ -72,6 +72,11 @@ return [
             ],
         ],
 
+        'default' => [ // ✅ додай цей блок
+            'driver' => 'redis',
+            'connection' => 'cache',
+        ],
+
         'redis' => [
             'driver' => 'redis',
             'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),

@@ -7,11 +7,21 @@
         : 'bg-gradient-to-r from-blue-700 to-blue-600 text-white'
     ]"
   >
-    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 transition-all duration-300">
       <!-- 🧠 Логотип -->
-      <div class="flex items-center gap-3 cursor-pointer select-none" @click="goHome">
-        <img src='@/assets/logo.svg' alt="Логотип" class="w-9 h-9" />
-        <span class="font-bold text-lg tracking-wide hidden sm:inline">
+      <div
+        class="flex items-center gap-3 cursor-pointer select-none transition-all duration-300"
+        @click="goHome"
+      >
+        <img
+          :src="isScrolled ? darkLogo : lightLogo"
+          alt="Логотип"
+          class="w-9 h-9 transition-all duration-300"
+        />
+        <span
+          class="font-bold text-lg tracking-wide hidden sm:inline transition-all duration-300"
+          :class="isScrolled ? 'text-blue-700' : 'text-white'"
+        >
           GitHub&nbsp;Університет
         </span>
       </div>
@@ -19,38 +29,77 @@
       <!-- ☰ Кнопка меню для мобільних -->
       <button
         @click="isMenuOpen = !isMenuOpen"
-        class="sm:hidden text-2xl focus:outline-none"
+        class="sm:hidden text-3xl focus:outline-none transition-all duration-300"
+        :class="isScrolled ? 'text-blue-700' : 'text-white'"
       >
         <span v-if="!isMenuOpen">☰</span>
         <span v-else>✕</span>
       </button>
 
       <!-- 🌐 Навігація -->
-      <nav
-        class="hidden sm:flex items-center gap-6 font-medium"
-      >
+      <nav class="hidden sm:flex items-center gap-8 font-semibold transition-all duration-300">
+        <!-- 🔹 Розклад -->
         <RouterLink
           to="/schedule"
-          class="hover:text-blue-300 transition-colors duration-200"
-          :class="{ 'text-blue-300 font-semibold': $route.name === 'schedule' }"
+          class="transition-all duration-300"
+          :class="linkClasses('schedule')"
         >
           Розклад
         </RouterLink>
 
+        <!-- 🔹 Особистий кабінет або Гостьовий доступ -->
         <RouterLink
+          v-if="auth.user"
           to="/profile"
-          class="hover:text-blue-300 transition-colors duration-200"
-          :class="{ 'text-blue-300 font-semibold': $route.name === 'profile' }"
+          class="transition-all duration-300"
+          :class="linkClasses('profile')"
         >
           Особистий кабінет
         </RouterLink>
 
-        <button
-          @click="logout"
-          class="ml-2 px-5 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 active:scale-95 text-white font-semibold shadow-sm transition-all duration-200"
+        <RouterLink
+          v-else
+          to="/guest"
+          class="transition-all duration-300"
+          :class="linkClasses('guest')"
         >
-          Вийти
-        </button>
+          Гостьовий доступ
+        </RouterLink>
+
+        <!-- 🔹 Авторизація / Вихід -->
+        <template v-if="auth.user">
+          <button
+            @click="logout"
+            class="ml-2 px-5 py-2 rounded-lg font-semibold shadow-sm transition-all duration-300"
+            :class="isScrolled
+              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              : 'bg-white text-blue-700 hover:bg-blue-100'"
+          >
+            Вийти
+          </button>
+        </template>
+
+        <template v-else>
+          <RouterLink
+            to="/login"
+            class="px-4 py-2 rounded-lg font-semibold transition-all duration-300"
+            :class="isScrolled
+              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              : 'bg-white text-blue-700 hover:bg-blue-100'"
+          >
+            Увійти
+          </RouterLink>
+
+          <RouterLink
+            to="/register"
+            class="px-4 py-2 rounded-lg font-semibold transition-all duration-300"
+            :class="isScrolled
+              ? 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+              : 'border border-white text-white hover:bg-white hover:text-blue-700'"
+          >
+            Зареєструватися
+          </RouterLink>
+        </template>
       </nav>
     </div>
 
@@ -58,42 +107,89 @@
     <transition name="slide-fade">
       <div
         v-if="isMenuOpen"
-        class="sm:hidden flex flex-col items-center bg-blue-700/95 text-white py-6 space-y-4 shadow-lg"
+        class="sm:hidden flex flex-col items-center py-6 space-y-4 shadow-lg transition-all duration-300"
+        :class="isScrolled ? 'bg-white/95 text-blue-700' : 'bg-blue-700/95 text-white'"
       >
         <RouterLink
           to="/schedule"
           @click="closeMenu"
-          class="text-lg hover:text-blue-300 transition-colors"
-          :class="{ 'text-blue-300 font-semibold': $route.name === 'schedule' }"
+          class="text-lg font-semibold transition-all duration-300"
+          :class="linkClasses('schedule', true)"
         >
           Розклад
         </RouterLink>
 
         <RouterLink
+          v-if="auth.user"
           to="/profile"
           @click="closeMenu"
-          class="text-lg hover:text-blue-300 transition-colors"
-          :class="{ 'text-blue-300 font-semibold': $route.name === 'profile' }"
+          class="text-lg font-semibold transition-all duration-300"
+          :class="linkClasses('profile', true)"
         >
           Особистий кабінет
         </RouterLink>
 
-        <button
-          @click="logout"
-          class="px-6 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 active:scale-95 text-white font-semibold shadow-sm transition-all"
+        <RouterLink
+          v-else
+          to="/guest"
+          @click="closeMenu"
+          class="text-lg font-semibold transition-all duration-300"
+          :class="linkClasses('guest', true)"
         >
-          Вийти
-        </button>
+          Гостьовий доступ
+        </RouterLink>
+
+        <template v-if="auth.user">
+          <button
+            @click="logout"
+            class="px-6 py-2 rounded-lg font-semibold shadow-sm transition-all"
+            :class="isScrolled
+              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              : 'bg-white text-blue-700 hover:bg-blue-100'"
+          >
+            Вийти
+          </button>
+        </template>
+
+        <template v-else>
+          <RouterLink
+            to="/login"
+            @click="closeMenu"
+            class="px-6 py-2 rounded-lg font-semibold transition-all"
+            :class="isScrolled
+              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              : 'bg-white text-blue-700 hover:bg-blue-100'"
+          >
+            Увійти
+          </RouterLink>
+
+          <RouterLink
+            to="/register"
+            @click="closeMenu"
+            class="px-6 py-2 rounded-lg font-semibold transition-all"
+            :class="isScrolled
+              ? 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+              : 'border border-white text-white hover:bg-white hover:text-blue-700'"
+          >
+            Зареєструватися
+          </RouterLink>
+        </template>
       </div>
     </transition>
   </header>
 </template>
 
 <script setup>
+import lightLogo from "@/assets/logo.svg";
+import darkLogo from "@/assets/logo-dark.svg";
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { useAuthStore } from "@/stores/useAuth"; // ✅ Підключаємо Pinia
 
 const router = useRouter();
+const route = useRoute();
+const auth = useAuthStore(); // ✅ Використовуємо стан авторизації
+
 const isScrolled = ref(false);
 const isMenuOpen = ref(false);
 
@@ -109,9 +205,25 @@ onMounted(() => window.addEventListener("scroll", handleScroll));
 onBeforeUnmount(() => window.removeEventListener("scroll", handleScroll));
 
 const goHome = () => router.push("/");
-const logout = () => {
+const logout = async () => {
   closeMenu();
-  alert("Вихід із системи...");
+  await auth.logout();
+  router.push("/");
+};
+
+// 🧠 Динамічні класи для посилань (активне / звичайне / скрол)
+const linkClasses = (name, isMobile = false) => {
+  const active = route.name === name;
+  const base = "transition-colors duration-300";
+  if (isScrolled.value) {
+    return active
+      ? `${base} text-blue-600 border-b-2 border-blue-600 pb-1`
+      : `${base} text-blue-700 hover:text-blue-500`;
+  } else {
+    return active
+      ? `${base} text-blue-200 border-b-2 border-white pb-1`
+      : `${base} text-white hover:text-blue-300`;
+  }
 };
 </script>
 

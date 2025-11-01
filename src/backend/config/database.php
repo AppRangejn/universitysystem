@@ -152,6 +152,15 @@ return [
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
+        // 🧩 Оце головне — цей блок має бути!
+        'redis' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', 'redis'), // 👈 назва контейнера redis
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 0,
+        ],
+
         'default' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
