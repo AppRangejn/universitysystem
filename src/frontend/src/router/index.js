@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-// 🧱 Layout
+// 🧱 Layouts
 import MainLayout from "@/layouts/MainLayout.vue";
+import AdminLayout from "@/layouts/AdminLayout.vue";
 
 // 🏠 Головна
 import HomePage from "@/pages/HomePage.vue";
@@ -11,6 +12,7 @@ import SchedulePage from "@/pages/Schedule/SchedulePage.vue";
 import StudentSchedule from "@/pages/Schedule/StudentSchedule.vue";
 import TeacherSchedule from "@/pages/Schedule/TeacherSchedule.vue";
 import AdminSchedule from "@/pages/Schedule/AdminSchedule.vue";
+import GroupSchedulePage from "@/pages/Schedule/GroupSchedulePage.vue";
 
 // 👤 Профіль
 import ProfilePage from "@/pages/Profile/ProfilePage.vue";
@@ -18,7 +20,6 @@ import ProfilePage from "@/pages/Profile/ProfilePage.vue";
 // 🔐 Авторизація
 import LoginPage from "@/pages/Auth/LoginPage.vue";
 import RegisterPage from "@/pages/Auth/RegisterPage.vue";
-
 
 const routes = [
   // --- Основний layout ---
@@ -37,26 +38,31 @@ const routes = [
         name: "schedule",
         component: SchedulePage,
         meta: { title: "Розклад — GitHub Університет" },
-        children: [
-          {
-            path: "student",
-            name: "student-schedule",
-            component: StudentSchedule,
-            meta: { title: "Розклад студента — GitHub Університет" },
-          },
-          {
-            path: "teacher",
-            name: "teacher-schedule",
-            component: TeacherSchedule,
-            meta: { title: "Розклад викладача — GitHub Університет" },
-          },
-          {
-            path: "admin",
-            name: "admin-schedule",
-            component: AdminSchedule,
-            meta: { title: "Адмін панель — GitHub Університет" },
-          },
-        ],
+      },
+      {
+        path: "schedule/group/:id",
+        name: "group-schedule",
+        component: GroupSchedulePage,
+        props: true,
+        meta: { title: "Розклад групи — GitHub Університет" },
+      },
+      {
+        path: "schedule/student",
+        name: "student-schedule",
+        component: StudentSchedule,
+        meta: { title: "Розклад студента — GitHub Університет" },
+      },
+      {
+        path: "schedule/teacher",
+        name: "teacher-schedule",
+        component: TeacherSchedule,
+        meta: { title: "Розклад викладача — GitHub Університет" },
+      },
+      {
+        path: "schedule/admin",
+        name: "admin-schedule-old",
+        component: AdminSchedule,
+        meta: { title: "Адмін розклад — GitHub Університет" },
       },
       {
         path: "profile",
@@ -67,7 +73,40 @@ const routes = [
     ],
   },
 
-  // --- Авторизація (без layout) ---
+  // --- ⚙️ Адмін layout ---
+  {
+    path: "/admin",
+    component: AdminLayout,
+    meta: { requiresAdmin: true },
+    children: [
+      {
+        path: "",
+        name: "admin-dashboard",
+        component: () => import("@/pages/Admin/AdminDashboard.vue"),
+        meta: { title: "Адмін панель — GitHub Університет" },
+      },
+      {
+        path: "schedule",
+        name: "admin-schedule",
+        component: () => import("@/pages/Schedule/AdminSchedule.vue"),
+        meta: { title: "Розклади — GitHub Університет" },
+      },
+      {
+        path: "users",
+        name: "admin-users",
+        component: () => import("@/pages/Admin/AdminUsers.vue"),
+        meta: { title: "Користувачі — GitHub Університет" },
+      },
+      {
+        path: "groups",
+        name: "admin-groups",
+        component: () => import("@/pages/Admin/AdminGroups.vue"),
+        meta: { title: "Групи — GitHub Університет" },
+      },
+    ],
+  },
+
+  // --- Авторизація ---
   {
     path: "/login",
     name: "login",
@@ -77,7 +116,7 @@ const routes = [
   {
     path: "/register",
     name: "register",
-    component: () => import("@/pages/Auth/RegisterPage.vue"),
+    component: RegisterPage,
     meta: { title: "Реєстрація — GitHub Університет" },
   },
 
@@ -96,7 +135,18 @@ const router = createRouter({
   },
 });
 
-// 🧭 Динамічна зміна заголовка сторінки
+// 🧭 Захист для адмінських маршрутів
+router.beforeEach((to, from, next) => {
+  const userRole = localStorage.getItem("userRole");
+
+  if (to.meta.requiresAdmin && userRole !== "admin") {
+    next("/login");
+  } else {
+    next();
+  }
+});
+
+// 🧠 Динамічна зміна заголовка сторінки
 router.afterEach((to) => {
   document.title = to.meta.title || "GitHub Університет";
 });

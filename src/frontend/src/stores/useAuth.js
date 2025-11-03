@@ -34,6 +34,10 @@ export const useAuthStore = defineStore("auth", {
         await axios.get("/sanctum/csrf-cookie");
         await axios.post("/api/login", credentials);
         await this.getUser();
+        if (this.user?.role) {
+          localStorage.setItem("userRole", this.user.role);
+        }
+
         console.log("✅ Вхід виконано:", this.user);
       } catch (err) {
         console.error("❌ Помилка входу:", err);
@@ -81,6 +85,7 @@ export const useAuthStore = defineStore("auth", {
       try {
         await axios.post("/api/logout");
         this.user = null;
+        localStorage.removeItem("userRole");
         console.log("👋 Вихід виконано");
       } catch (err) {
         console.error("Помилка при виході:", err);
