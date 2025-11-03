@@ -12,6 +12,6 @@ class Course extends Model
     }
 
     public function groups() {
-        return $this->hasMany(Group::class);
+        return $this->hasMany(Group::class, 'course_id', 'id');
     }
 }

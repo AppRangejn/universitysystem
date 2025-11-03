@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ScheduleSettingController;
 
 // 🔐 Auth
 Route::post('/login', [AuthController::class, 'login']);
@@ -29,5 +30,11 @@ Route::get('/schedules/{schedule}', [ScheduleController::class, 'show']);
 
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('/stats', [AdminDashboardController::class, 'stats']);
-    Route::apiResource('/users', UserController::class); // 🧩 CRUD користувачів
+    Route::apiResource('/users', UserController::class);
+    Route::apiResource('/groups', GroupController::class);
+    Route::apiResource('/courses', CourseController::class);
+    Route::apiResource('/faculties', FacultyController::class);
+    Route::apiResource('/schedules', ScheduleController::class);
+    Route::get('/settings/schedule', [ScheduleSettingController::class, 'index']);
+    Route::put('/settings/schedule', [ScheduleSettingController::class, 'update']);
 });

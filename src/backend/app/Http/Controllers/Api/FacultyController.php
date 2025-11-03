@@ -7,13 +7,48 @@ use App\Models\Faculty;
 
 class FacultyController extends Controller
 {
+    // 📚 Всі факультети з курсами та групами
     public function index()
     {
-        return Faculty::with('courses.groups')->get();
+        return response()->json(
+            Faculty::with('courses.groups')->get()
+        );
     }
 
+    // 👁️ Один факультет з повною структурою
     public function show(Faculty $faculty)
     {
-        return $faculty->load('courses.groups');
+        return response()->json(
+            $faculty->load('courses.groups')
+        );
+    }
+
+    // ➕ Створити факультет
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $faculty = Faculty::create($validated);
+        return response()->json($faculty, 201);
+    }
+
+    // ✏️ Оновити факультет
+    public function update(Request $request, Faculty $faculty)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $faculty->update($validated);
+        return response()->json($faculty);
+    }
+
+    // ❌ Видалити факультет
+    public function destroy(Faculty $faculty)
+    {
+        $faculty->delete();
+        return response()->json(['message' => 'Факультет видалено']);
     }
 }
