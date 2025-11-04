@@ -48,4 +48,10 @@ class User extends Authenticatable
     {
         return $this->role === 'guest';
     }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
+
 }

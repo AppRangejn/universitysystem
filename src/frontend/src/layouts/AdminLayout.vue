@@ -14,7 +14,7 @@
           📊 Головна
         </RouterLink>
         <RouterLink
-          to="/admin/schedule"
+          to="/admin/schedules"
           class="block px-4 py-2 rounded hover:bg-blue-700 transition"
         >
           📚 Розклад
@@ -30,6 +30,24 @@
           class="block px-4 py-2 rounded hover:bg-blue-700 transition"
         >
           🏫 Групи
+        </RouterLink>
+        <RouterLink
+          to="/admin/courses"
+          class="block px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          📘 Курси
+        </RouterLink>
+        <RouterLink
+          to="/admin/faculties"
+          class="block px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          🏛️ Факультети
+        </RouterLink>
+        <RouterLink
+          to="/admin/schedule-settings"
+          class="block px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+           Налаштування розкладу
         </RouterLink>
       </nav>
 

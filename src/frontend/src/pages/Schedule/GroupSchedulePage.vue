@@ -1,6 +1,6 @@
 <template>
   <div class="mt-10 bg-white rounded-2xl shadow-xl border border-blue-200 overflow-hidden">
-    <!-- Верхня шапка -->
+    <!-- 🔹 Верхня шапка -->
     <div class="bg-blue-700 text-white py-6 text-center border-b-4 border-blue-500">
       <h2 class="text-3xl font-bold uppercase tracking-wide">
         Розклад групи {{ groupName || "..." }}
@@ -8,7 +8,7 @@
       <p class="text-lg font-semibold mt-1">Тиждень 1</p>
     </div>
 
-    <!-- Таблиця -->
+    <!-- 🔄 Завантаження -->
     <div v-if="loading" class="text-center py-10 text-gray-500 text-lg">
       Завантаження...
     </div>
@@ -17,9 +17,9 @@
       Розклад відсутній 😔
     </div>
 
+    <!-- 📅 Таблиця -->
     <div v-else class="overflow-x-auto">
       <table class="w-full text-center border-collapse">
-        <!-- Заголовки -->
         <thead class="bg-blue-100 text-blue-900 border-b border-blue-300">
         <tr>
           <th class="border border-blue-200 py-3 w-24 font-bold text-lg bg-blue-800 text-white">
@@ -35,24 +35,23 @@
         </tr>
         </thead>
 
-        <!-- Тіло таблиці -->
         <tbody>
-        <tr v-for="(pairNumber, idx) in pairNumbers" :key="idx" class="odd:bg-white even:bg-blue-50">
-          <!-- Колонка № пари -->
-          <td
-            class="border border-blue-200 py-6 font-bold text-blue-800 bg-blue-50"
-          >
+        <tr
+          v-for="pairNumber in pairNumbers"
+          :key="pairNumber"
+          class="odd:bg-white even:bg-blue-50"
+        >
+          <td class="border border-blue-200 py-6 font-bold text-blue-800 bg-blue-50">
             {{ pairNumber }}
           </td>
 
-          <!-- Пари -->
           <td
             v-for="day in days"
             :key="day"
             class="border border-blue-200 align-top px-2 py-3 min-w-[220px] relative"
           >
             <div
-              v-for="lesson in getDaySchedule(day)"
+              v-for="lesson in getDaySchedule(day, pairNumber)"
               :key="lesson.id"
               class="bg-yellow-100 border border-yellow-400 rounded-md p-2 mb-2 shadow-sm hover:shadow-md transition text-left"
             >
@@ -60,7 +59,7 @@
                 {{ lesson.subject }}
               </p>
               <p class="text-sm text-gray-700 mt-1 italic">
-                {{ lesson.type }}
+                {{ lesson.type || 'Заняття' }}
               </p>
               <p class="text-sm text-gray-700 mt-1">
                 <span class="font-semibold">Викладач:</span> {{ lesson.teacher }}
@@ -72,7 +71,7 @@
             </div>
 
             <div
-              v-if="getDaySchedule(day).length === 0"
+              v-if="getDaySchedule(day, pairNumber).length === 0"
               class="text-gray-400 italic text-sm"
             >
               —
@@ -81,11 +80,6 @@
         </tr>
         </tbody>
       </table>
-    </div>
-
-    <!-- Нижня частина -->
-    <div class="bg-blue-50 py-3 text-center text-blue-800 border-t border-blue-200 text-sm">
-      © Житомирська політехніка, {{ new Date().getFullYear() }}
     </div>
   </div>
 </template>
@@ -99,26 +93,54 @@ const route = useRoute();
 const groupName = ref("");
 const schedules = ref([]);
 const loading = ref(true);
+const days = ref([]);
+const pairNumbers = ref([]);
 
-const days = ["Понеділок", "Вівторок", "Середа", "Четвер", "П’ятниця"];
-const pairNumbers = [1, 2, 3, 4, 5, 6];
-
-const getDaySchedule = (day) => {
-  return schedules.value.filter((s) => s.day === day);
+const getDaySchedule = (day, pairNumber) => {
+  return schedules.value.filter(
+    (s) =>
+      s.day?.trim().toLowerCase() === day.trim().toLowerCase() &&
+      Number(s.pair_number) === Number(pairNumber)
+  );
 };
 
 onMounted(async () => {
   try {
     const groupId = route.params.id;
+
+    // 🧩 Назва групи
     const groupRes = await axios.get(`/api/groups/${groupId}`);
     groupName.value = groupRes.data.name;
 
+    // ⚙️ Отримати налаштування розкладу
+    const settingsRes = await axios.get("/api/admin/settings/schedule");
+    const settings = settingsRes.data;
+
+    // Записати дні та кількість пар
+    days.value =
+      Array.isArray(settings.days) && settings.days.length
+        ? settings.days
+        : ["Понеділок", "Вівторок", "Середа", "Четвер", "П’ятниця"];
+
+    pairNumbers.value = Array.from(
+      { length: settings.pair_count || 6 },
+      (_, i) => i + 1
+    );
+
+    // 📅 Отримати розклад
     const scheduleRes = await axios.get(`/api/schedules?group_id=${groupId}`);
     schedules.value = scheduleRes.data;
   } catch (err) {
-    console.error("Помилка при завантаженні розкладу:", err);
+    console.error("❌ Помилка при завантаженні розкладу:", err);
   } finally {
     loading.value = false;
   }
 });
 </script>
+
+<style scoped>
+table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+</style>

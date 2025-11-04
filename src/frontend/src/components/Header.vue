@@ -40,7 +40,7 @@
       <nav class="hidden sm:flex items-center gap-8 font-semibold transition-all duration-300">
         <!-- 🔹 Розклад -->
         <RouterLink
-          to="/schedule"
+          to="/schedules"
           class="transition-all duration-300"
           :class="linkClasses('schedule')"
         >

@@ -1,154 +1,282 @@
 <template>
-  <div
-    class="min-h-screen bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 text-white flex flex-col items-center py-12 px-4 md:px-8"
-  >
-    <!-- 🧑‍🎓 Заголовок -->
-    <div class="text-center mb-10">
-      <h1 class="text-4xl font-extrabold mb-3">
-        Вітаємо, {{ userFullName }}!
-      </h1>
-      <p class="text-blue-100 text-lg">
-        Ви увійшли до власного електронного кабінету 🎓
-      </p>
-    </div>
-
-    <!-- 📸 Фото профілю -->
-    <div class="flex flex-col items-center mb-10">
-      <img
-        v-if="user.photo"
-        :src="photoUrl"
-        alt="Фото користувача"
-        class="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-white/30"
-      />
-      <div
-        v-else
-        class="w-32 h-32 flex items-center justify-center rounded-full bg-white/10 text-4xl font-bold border border-white/30"
-      >
-        {{ userInitials }}
+  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 py-10 px-4 md:px-10">
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl border border-blue-200 overflow-hidden">
+      <!-- 🔹 Верхня панель -->
+      <div class="bg-blue-700 text-white py-8 px-6 text-center border-b-4 border-blue-500">
+        <h1 class="text-4xl font-extrabold uppercase tracking-wide drop-shadow-sm">
+          Вітаємо, {{ fullName || "Студент" }}!
+        </h1>
+        <p class="text-blue-100 text-lg mt-2">
+          Ви увійшли до власного електронного кабінету 🎓
+        </p>
       </div>
-      <p class="mt-3 text-white/70 text-sm">
-        {{ user.role === 'student'
-        ? 'Студент'
-        : user.role === 'teacher'
-          ? 'Викладач'
-          : user.role === 'admin'
-            ? 'Адміністратор'
-            : 'Гість' }}
-      </p>
-    </div>
 
-    <!-- 📘 Основна інформація -->
-    <div
-      class="w-full max-w-4xl bg-white/10 backdrop-blur-2xl rounded-3xl shadow-lg border border-white/20 p-8"
-    >
-      <h2 class="text-2xl font-bold mb-6 border-b border-white/30 pb-3">
-        Інформація профілю
-      </h2>
+      <!-- 🔄 Завантаження -->
+      <div v-if="loading" class="text-center py-16 text-gray-500 text-lg">
+        Завантаження профілю...
+      </div>
 
-      <table class="w-full text-left text-white/90 border-collapse">
-        <tbody>
-        <tr>
-          <td class="py-3 font-semibold w-1/3">ПІБ</td>
-          <td>{{ userFullName }}</td>
-        </tr>
-        <tr>
-          <td class="py-3 font-semibold">Email</td>
-          <td>{{ user.email }}</td>
-        </tr>
-        <tr v-if="user.phone">
-          <td class="py-3 font-semibold">Телефон</td>
-          <td>{{ user.phone }}</td>
-        </tr>
-        <tr>
-          <td class="py-3 font-semibold">Роль</td>
-          <td>
-              <span
-                :class="{
-                  'bg-green-600/80': user.role === 'student',
-                  'bg-yellow-600/80': user.role === 'teacher',
-                  'bg-red-600/80': user.role === 'admin',
-                  'bg-gray-500/70': user.role === 'guest',
-                }"
-                class="px-3 py-1 rounded-md text-sm uppercase font-semibold"
+      <div v-else class="p-8 space-y-10">
+        <!-- 🧑‍🎓 Фото та базова інформація -->
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="relative">
+            <img
+              v-if="user.photo"
+              :src="photoUrl"
+              alt="Фото користувача"
+              class="w-36 h-36 rounded-full object-cover border-4 border-blue-300 shadow-lg"
+            />
+            <div
+              v-else
+              class="w-36 h-36 flex items-center justify-center rounded-full bg-blue-100 text-blue-800 text-5xl font-bold border border-blue-300 shadow-md"
+            >
+              {{ initials }}
+            </div>
+          </div>
+
+          <div class="flex-1 w-full">
+            <table class="w-full border border-blue-100 rounded-xl overflow-hidden">
+              <tbody>
+              <tr class="border-b border-blue-100">
+                <td class="bg-blue-50 px-4 py-3 font-semibold text-blue-900 w-1/3">ПІБ</td>
+                <td class="px-4 py-3">{{ fullName }}</td>
+              </tr>
+              <tr class="border-b border-blue-100">
+                <td class="bg-blue-50 px-4 py-3 font-semibold text-blue-900">Email</td>
+                <td class="px-4 py-3">{{ user.email }}</td>
+              </tr>
+              <tr v-if="user.phone" class="border-b border-blue-100">
+                <td class="bg-blue-50 px-4 py-3 font-semibold text-blue-900">Телефон</td>
+                <td class="px-4 py-3">{{ user.phone }}</td>
+              </tr>
+              <tr class="border-b border-blue-100">
+                <td class="bg-blue-50 px-4 py-3 font-semibold text-blue-900">Приналежність до групи</td>
+                <td class="px-4 py-3">
+                    <span
+                      v-if="user.group"
+                      class="font-semibold text-blue-700 bg-blue-50 px-3 py-1 rounded-md border border-blue-200"
+                    >
+                      {{ user.group.name }}
+                    </span>
+                  <span v-else class="italic text-gray-500">Без групи</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-blue-50 px-4 py-3 font-semibold text-blue-900">Дата створення</td>
+                <td class="px-4 py-3">{{ formatDate(user.created_at) }}</td>
+              </tr>
+              </tbody>
+            </table>
+
+            <div class="text-right mt-5">
+              <button
+                @click="goToSchedule"
+                :disabled="!user.group"
+                class="px-7 py-2.5 rounded-md font-semibold shadow-sm transition-all duration-200"
+                :class="user.group
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
               >
-                {{ user.role }}
-              </span>
-          </td>
-        </tr>
-        <tr>
-          <td class="py-3 font-semibold">Дата створення акаунта</td>
-          <td>{{ formatDate(user.created_at) }}</td>
-        </tr>
-        <tr v-if="user.updated_at !== user.created_at">
-          <td class="py-3 font-semibold">Останнє оновлення</td>
-          <td>{{ formatDate(user.updated_at) }}</td>
-        </tr>
-        </tbody>
-      </table>
+                📅 Переглянути розклад
+              </button>
+            </div>
+          </div>
+        </div>
 
-      <!-- 🔘 Кнопка виходу -->
-      <div class="text-center mt-8">
-        <button
-          @click="logout"
-          class="px-8 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold shadow-md transition"
-        >
-          Вийти з акаунта
-        </button>
+        <!-- ✏️ Редагування профілю -->
+        <section class="pt-6 border-t border-blue-200">
+          <h2 class="text-2xl font-bold text-blue-800 border-l-4 border-blue-500 pl-3 mb-6">
+            Редагування профілю
+          </h2>
+
+          <form @submit.prevent="updateProfile" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">Прізвище</label>
+              <input v-model="form.surname" class="input" type="text" />
+            </div>
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">Ім’я</label>
+              <input v-model="form.name" class="input" type="text" />
+            </div>
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">По батькові</label>
+              <input v-model="form.patronymic" class="input" type="text" />
+            </div>
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">Email</label>
+              <input v-model="form.email" class="input" type="email" />
+            </div>
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">Телефон</label>
+              <input v-model="form.phone" class="input" type="text" />
+            </div>
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">Фото профілю</label>
+              <input @change="onFileChange" class="input" type="file" />
+            </div>
+
+            <div class="col-span-2 text-right">
+              <button
+                type="submit"
+                class="bg-green-600 hover:bg-green-700 text-white px-10 py-2.5 rounded-md font-semibold shadow-md transition"
+              >
+                💾 Зберегти зміни
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 🔐 Зміна пароля -->
+        <section class="pt-6 border-t border-blue-200">
+          <h2 class="text-2xl font-bold text-blue-800 border-l-4 border-blue-500 pl-3 mb-6">
+            Зміна пароля
+          </h2>
+
+          <form @submit.prevent="changePassword" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">Поточний пароль</label>
+              <input
+                v-model="passwordForm.current_password"
+                class="input"
+                type="password"
+                placeholder="Введіть поточний"
+              />
+            </div>
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">Новий пароль</label>
+              <input
+                v-model="passwordForm.new_password"
+                class="input"
+                type="password"
+                placeholder="Новий пароль"
+              />
+            </div>
+            <div>
+              <label class="font-semibold text-blue-800 mb-1 block">Підтвердження</label>
+              <input
+                v-model="passwordForm.new_password_confirmation"
+                class="input"
+                type="password"
+                placeholder="Підтвердьте пароль"
+              />
+            </div>
+
+            <div class="col-span-3 text-right">
+              <button
+                type="submit"
+                class="bg-yellow-500 hover:bg-yellow-600 text-white px-10 py-2.5 rounded-md font-semibold shadow-md transition"
+              >
+                🔑 Оновити пароль
+              </button>
+            </div>
+          </form>
+        </section>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useAuthStore } from "@/stores/useAuth";
+import { ref, computed, onMounted } from "vue";
+import axios from "axios";
 import { useRouter } from "vue-router";
 
-const auth = useAuthStore();
 const router = useRouter();
+const user = ref({});
+const loading = ref(true);
 
-const user = computed(() => auth.user || {});
-
-// 🧾 Повне ім’я
-const userFullName = computed(() => {
-  const parts = [user.value.surname, user.value.name, user.value.patronymic];
-  return parts.filter(Boolean).join(" ");
+const form = ref({});
+const passwordForm = ref({
+  current_password: "",
+  new_password: "",
+  new_password_confirmation: "",
 });
+const photoFile = ref(null);
 
-// 🖼️ Фото або ініціали
-const userInitials = computed(() => {
-  const s = user.value.surname?.[0] || "";
-  const n = user.value.name?.[0] || "";
-  return (s + n).toUpperCase();
-});
+const fullName = computed(() =>
+  [user.value.surname, user.value.name, user.value.patronymic].filter(Boolean).join(" ")
+);
+const initials = computed(() =>
+  (user.value.surname?.[0] || "") + (user.value.name?.[0] || "")
+);
+const photoUrl = computed(() =>
+  user.value.photo ? `/${user.value.photo}` : ""
+);
 
-const photoUrl = computed(() => {
-  if (!user.value.photo) return null;
-  return user.value.photo.startsWith("http")
-    ? user.value.photo
-    : `/storage/${user.value.photo}`;
-});
+// ✅ отримуємо користувача разом із групою
+const fetchUser = async () => {
+  try {
+    const res = await axios.get("/api/user");
+    user.value = res.data; // Laravel повертає користувача напряму
+    form.value = { ...res.data };
+  } catch (err) {
+    console.error("Помилка при завантаженні профілю:", err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// ✅ оновлення профілю з фото
+const updateProfile = async () => {
+  const fd = new FormData();
+  Object.keys(form.value).forEach((k) => fd.append(k, form.value[k] || ""));
+  if (photoFile.value) fd.append("photo", photoFile.value);
+
+  const res = await axios.post("/api/user/profile?_method=PUT", fd, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  user.value = res.data.user; // після відповіді бек повертає user
+  alert("✅ Профіль оновлено!");
+};
+
+// ✅ зміна пароля
+const changePassword = async () => {
+  await axios.post("/api/user/change-password", passwordForm.value);
+  alert("🔑 Пароль змінено!");
+  passwordForm.value = { current_password: "", new_password: "", new_password_confirmation: "" };
+};
+
+// ✅ обробка фото
+const onFileChange = (e) => {
+  photoFile.value = e.target.files[0];
+};
+
+// ✅ перехід на розклад групи
+const goToSchedule = () => {
+  if (user.value.group) {
+    router.push(`/schedule/group/${user.value.group.id}`);
+  } else {
+    alert("❗ Користувач не прив’язаний до жодної групи.");
+  }
+};
 
 const formatDate = (dateStr) => {
-  if (!dateStr) return "—";
   const d = new Date(dateStr);
-  return d.toLocaleString("uk-UA", {
+  return d.toLocaleDateString("uk-UA", {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
   });
 };
 
-const logout = async () => {
-  await auth.logout();
-  router.push("/login");
-};
+onMounted(fetchUser);
 </script>
 
 <style scoped>
-table td {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+.input {
+  border: 1px solid #cfe0f9;
+  border-radius: 8px;
+  padding: 10px 12px;
+  width: 100%;
+  color: #1e3a8a;
+  background-color: #f9fbff;
+  transition: all 0.2s;
+}
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 </style>
