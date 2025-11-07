@@ -207,7 +207,7 @@ const photoUrl = computed(() =>
 const fetchUser = async () => {
   try {
     const res = await axios.get("/api/user");
-    user.value = res.data; // Laravel повертає користувача напряму
+    user.value = res.data;
     form.value = { ...res.data };
   } catch (err) {
     console.error("Помилка при завантаженні профілю:", err);
@@ -216,18 +216,33 @@ const fetchUser = async () => {
   }
 };
 
-// ✅ оновлення профілю з фото
+// ✅ оновлення профілю з гнучкою логікою
 const updateProfile = async () => {
   const fd = new FormData();
-  Object.keys(form.value).forEach((k) => fd.append(k, form.value[k] || ""));
-  if (photoFile.value) fd.append("photo", photoFile.value);
 
-  const res = await axios.post("/api/user/profile?_method=PUT", fd, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  // Додаємо тільки ті поля, які реально заповнені / змінені
+  for (const [key, value] of Object.entries(form.value)) {
+    if (value !== null && value !== undefined && value !== "") {
+      fd.append(key, value);
+    }
+  }
 
-  user.value = res.data.user; // після відповіді бек повертає user
-  alert("✅ Профіль оновлено!");
+  // Якщо вибрали нове фото — додаємо
+  if (photoFile.value) {
+    fd.append("photo", photoFile.value);
+  }
+
+  try {
+    const res = await axios.post("/api/user/profile?_method=PUT", fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    user.value = res.data.user; // бек повертає одразу з group
+    alert("✅ Профіль успішно оновлено!");
+  } catch (err) {
+    console.error("Помилка при оновленні профілю:", err);
+    alert("❌ Помилка при збереженні профілю");
+  }
 };
 
 // ✅ зміна пароля
@@ -262,6 +277,7 @@ const formatDate = (dateStr) => {
 
 onMounted(fetchUser);
 </script>
+
 
 <style scoped>
 .input {

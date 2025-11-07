@@ -20,6 +20,8 @@ class User extends Authenticatable
         'password',
         'photo',
         'role',
+        'group_id',
+        'password',
     ];
 
     protected $hidden = ['password', 'remember_token'];

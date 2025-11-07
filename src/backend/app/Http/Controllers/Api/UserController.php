@@ -24,7 +24,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    // ➕ Створити користувача (через адмінку)
+    // ➕ Створити користувача
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -38,10 +38,10 @@ class UserController extends Controller
         $validated['password'] = Hash::make($validated['password']);
         $user = User::create($validated);
 
-        return response()->json($user->load('group'), 201);
+        return response()->json($user, 201);
     }
 
-    // ✏️ Оновити користувача (адмін)
+    // ✏️ Оновити користувача
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -59,7 +59,7 @@ class UserController extends Controller
         }
 
         $user->update($validated);
-        return response()->json($user->load('group'));
+        return response()->json($user);
     }
 
     // ❌ Видалити користувача
@@ -67,11 +67,10 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-
         return response()->json(['message' => 'Користувача видалено']);
     }
 
-    // 🧑‍🎓 Оновити власний профіль користувача
+    // 🧑‍🎓 Оновлення профілю користувача
     public function updateProfile(Request $request)
     {
         $user = $request->user();
@@ -80,35 +79,34 @@ class UserController extends Controller
             'name' => 'nullable|string|max:255',
             'surname' => 'nullable|string|max:255',
             'patronymic' => 'nullable|string|max:255',
-            'email' => 'nullable|email|unique:users,email,' . $user->id,
+            'email' => ['nullable', 'email', Rule::unique('users')->ignore($user->id)],
             'phone' => 'nullable|string|max:20',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => $request->hasFile('photo') ? 'image|max:2048' : 'nullable',
         ]);
 
-        // 📸 Оновлення фото
+        // 🖼 Фото змінюємо лише якщо завантажене
         if ($request->hasFile('photo')) {
-            // видаляємо старе фото, якщо існує
-            if ($user->photo && file_exists(public_path($user->photo))) {
-                @unlink(public_path($user->photo));
-            }
-
-            $filename = uniqid() . '.' . $request->file('photo')->getClientOriginalExtension();
-            $request->file('photo')->move(public_path('photos'), $filename);
-            $validated['photo'] = 'photos/' . $filename;
+            $path = $request->file('photo')->store('photos', 'public');
+            $validated['photo'] = $path;
         }
 
-        $user->update($validated);
+        // 🧠 Оновлюємо лише передані поля
+        foreach ($validated as $key => $value) {
+            if ($value !== null && $value !== '') {
+                $user->$key = $value;
+            }
+        }
 
-        // 🔥 Ключ: перевантажуємо користувача з групою, щоб не злітала
-        $user = User::with('group')->find($user->id);
+        $user->save();
+        $user->load('group');
 
         return response()->json([
             'message' => '✅ Профіль оновлено успішно',
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
-    // 🔑 Зміна пароля користувача
+    // 🔑 Зміна пароля
     public function changePassword(Request $request)
     {
         $request->validate([
@@ -128,7 +126,7 @@ class UserController extends Controller
         return response()->json(['message' => 'Пароль успішно змінено']);
     }
 
-    // 🏫 Призначити студенту групу (через адмінку)
+    // 🏫 Призначити студенту групу
     public function assignGroup(Request $request, User $user)
     {
         $request->validate([
