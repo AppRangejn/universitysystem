@@ -200,8 +200,9 @@ const initials = computed(() =>
   (user.value.surname?.[0] || "") + (user.value.name?.[0] || "")
 );
 const photoUrl = computed(() =>
-  user.value.photo ? `/${user.value.photo}` : ""
+  user.value.photo ? `/storage/${user.value.photo.replace(/^public\//, '')}` : ""
 );
+
 
 // ✅ отримуємо користувача разом із групою
 const fetchUser = async () => {
