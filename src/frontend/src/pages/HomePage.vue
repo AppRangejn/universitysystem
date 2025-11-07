@@ -19,9 +19,7 @@
           alt="GitHub Logo"
           class="w-24 invert brightness-1000 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] mx-auto mb-4"
         />
-        <h1
-          class="text-2xl md:text-5xl font-extrabold mb-4 text-white leading-tight"
-        >
+        <h1 class="text-2xl md:text-5xl font-extrabold mb-4 text-white leading-tight">
           Освітня платформа
         </h1>
         <p class="text-blue-100/90 text-lg">
@@ -52,29 +50,31 @@
       <transition name="fade" mode="out-in">
         <div v-if="activeTab === 'schedule'" key="schedule" class="text-lg">
           <p class="mb-6 text-blue-100">
-            Перегляньте свій <span class="text-white font-semibold">розклад занять</span> —
+            Перегляньте свій
+            <span class="text-white font-semibold">розклад занять</span> —
             швидко, зручно і сучасно.
+            Тут ви знайдете інформацію про пари, викладачів та аудиторії.
           </p>
           <button
-            @click="goToSchedule"
+            @click="goTo('schedule')"
             class="px-8 py-4 rounded-full bg-white text-[#004AAD] font-semibold shadow-lg hover:bg-blue-100 transition-all duration-500"
           >
-            Відкрити розклад
+            Перейти до розкладу
           </button>
         </div>
 
         <div v-else-if="activeTab === 'cabinet'" key="cabinet" class="text-lg text-blue-100/90">
-          <p>
-            Особистий кабінет наразі <span class="font-semibold text-white">у розробці</span>.
-            Тут ви зможете переглядати оцінки, фінанси та повідомлення.
+          <p class="mb-6">
+            Вітаємо у вашому
+            <span class="font-semibold text-white">особистому кабінеті</span>!
+            Тут можна переглядати дані профілю, відкрити свій розклад.
           </p>
-        </div>
-
-        <div v-else-if="activeTab === 'learn'" key="learn" class="text-lg text-blue-100/90">
-          <p>
-            Платформа <span class="font-semibold text-white">Learn</span> скоро буде доступна.
-            Тут ви зможете проходити курси, переглядати лекції та здавати завдання.
-          </p>
+          <button
+            @click="goTo('cabinet')"
+            class="px-8 py-4 rounded-full bg-white text-[#004AAD] font-semibold shadow-lg hover:bg-blue-100 transition-all duration-500"
+          >
+            Перейти до кабінету
+          </button>
         </div>
       </transition>
     </div>
@@ -90,13 +90,17 @@ const router = useRouter();
 const tabs = [
   { name: "schedule", label: "Розклад" },
   { name: "cabinet", label: "Особистий кабінет" },
-  { name: "learn", label: "Навчальна платформа" },
 ];
 
 const activeTab = ref("schedule");
 
-const goToSchedule = () => {
-  router.push("/schedule");
+// 🚀 Натискання на кнопку "Перейти"
+const goTo = (target) => {
+  if (target === "schedule") {
+    router.push("/schedules");
+  } else if (target === "cabinet") {
+    router.push("/profile");
+  }
 };
 </script>
 

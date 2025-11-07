@@ -14,7 +14,7 @@
           <RouterLink
             to="/schedule"
             class="hover:text-blue-300 transition"
-            :class="{ 'text-blue-300 font-semibold': $route.name === 'schedule' }"
+            :class="{ 'text-blue-300 font-semibold': $route.name === 'schedules' }"
           >
             Розклад
           </RouterLink>
@@ -24,13 +24,6 @@
             :class="{ 'text-blue-300 font-semibold': $route.name === 'profile' }"
           >
             Особистий кабінет
-          </RouterLink>
-          <RouterLink
-            to="/learn"
-            class="hover:text-blue-300 transition"
-            :class="{ 'text-blue-300 font-semibold': $route.name === 'learn' }"
-          >
-            Навчальна платформа
           </RouterLink>
         </nav>
 

@@ -43,16 +43,18 @@ class AuthController extends Controller
             return response()->json(['message' => 'Невірні дані для входу'], 401);
         }
 
-        // ✅ Перевіряємо, чи є сесія
-        if ($request->hasSession()) {
-            $request->session()->regenerate();
-        }
+        $user = auth()->user();
+
+        // Створюємо персональний токен через Sanctum
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'user' => auth()->user(),
+            'user' => $user,
+            'token' => $token,
             'message' => 'Успішний вхід',
         ]);
     }
+
 
 
 
@@ -63,10 +65,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        auth()->guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Вихід виконано']);
     }
+
 }
