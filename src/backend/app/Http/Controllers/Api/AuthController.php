@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
-        // Створюємо персональний токен через Sanctum
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

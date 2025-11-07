@@ -9,7 +9,7 @@ return new class extends Migration {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->string('name'); // Наприклад: "КН-23-1"
+            $table->string('name');
             $table->timestamps();
         });
     }

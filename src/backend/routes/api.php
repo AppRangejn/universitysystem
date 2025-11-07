@@ -11,17 +11,17 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ScheduleSettingController;
 use App\Models\User;
 
-// 🔐 Авторизація
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
-// 👤 Поточний користувач з групою
+
 Route::middleware('auth:sanctum')->get('/user', function (\Illuminate\Http\Request $request) {
     return User::with('group')->find($request->user()->id);
 });
 
-// 📚 Публічні маршрути
+
 Route::get('/faculties', [FacultyController::class, 'index']);
 Route::get('/faculties/{faculty}', [FacultyController::class, 'show']);
 
@@ -34,7 +34,7 @@ Route::get('/groups/{group}', [GroupController::class, 'show']);
 Route::get('/schedules', [ScheduleController::class, 'index']);
 Route::get('/schedules/{schedule}', [ScheduleController::class, 'show']);
 
-// ⚙️ Admin зона
+
 Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::get('/stats', [AdminDashboardController::class, 'stats']);
     Route::apiResource('/users', UserController::class);
@@ -47,7 +47,7 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::put('/settings/schedule', [ScheduleSettingController::class, 'update']);
 });
 
-// 👤 Особистий кабінет користувача
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user/profile', [UserController::class, 'updateProfile']);
     Route::post('/user/change-password', [UserController::class, 'changePassword']);

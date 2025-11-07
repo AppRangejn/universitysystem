@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-// ⚙️ Глобальна конфігурація axios
-axios.defaults.baseURL = "http://localhost:8081"; // ← заміни на свій бекенд, якщо треба
+axios.defaults.baseURL = "http://localhost:8081";
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = "XSRF-TOKEN";
 axios.defaults.xsrfHeaderName = "X-XSRF-TOKEN";
@@ -16,7 +15,6 @@ export const useAuthStore = defineStore("auth", {
   }),
 
   actions: {
-    // 🧭 Встановити токен в axios
     setAuthHeader(token) {
       if (token) {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -25,13 +23,11 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    // 👤 Отримати поточного користувача
     async getUser() {
       try {
         const res = await axios.get("/api/user");
         this.user = res.data;
 
-        // Якщо бекенд повертає токен разом із користувачем — збережи його
         if (res.data?.token && !this.token) {
           this.token = res.data.token;
           localStorage.setItem("authToken", this.token);
@@ -45,7 +41,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    // 🔐 Вхід
     async login(credentials) {
       this.loading = true;
       this.error = null;
@@ -53,7 +48,6 @@ export const useAuthStore = defineStore("auth", {
         await axios.get("/sanctum/csrf-cookie");
         const res = await axios.post("/api/login", credentials);
 
-        // 🎟️ Якщо API повертає токен
         if (res.data?.token) {
           this.token = res.data.token;
           localStorage.setItem("authToken", this.token);
@@ -77,7 +71,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    // 🧾 Реєстрація
     async register(data) {
       this.loading = true;
       this.error = null;
@@ -106,7 +99,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    // 🔄 Автоматичне відновлення сесії
     async restoreSession() {
       const savedToken = localStorage.getItem("authToken");
       if (savedToken) {
@@ -116,7 +108,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    // 🚪 Вихід
     async logout() {
       try {
         await axios.post("/api/logout");

@@ -8,20 +8,20 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    // 📋 Всі групи
+
     public function index()
     {
         return response()->json(Group::with('course')->get());
     }
 
-    // 👁️ Одна група
+
     public function show($id)
     {
         $group = Group::with('course')->findOrFail($id);
         return response()->json($group);
     }
 
-    // ➕ Додати групу
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -33,7 +33,7 @@ class GroupController extends Controller
         return response()->json($group, 201);
     }
 
-    // ✏️ Оновити групу
+
     public function update(Request $request, $id)
     {
         $group = Group::findOrFail($id);
@@ -47,7 +47,7 @@ class GroupController extends Controller
         return response()->json($group);
     }
 
-    // ❌ Видалити групу
+
     public function destroy($id)
     {
         $group = Group::findOrFail($id);

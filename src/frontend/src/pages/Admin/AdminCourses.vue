@@ -13,7 +13,6 @@ const form = reactive({
   faculty_id: "",
 });
 
-// 📋 Отримати всі курси
 async function fetchCourses() {
   loading.value = true;
   try {
@@ -26,7 +25,6 @@ async function fetchCourses() {
   }
 }
 
-// 🎓 Отримати факультети
 async function fetchFaculties() {
   try {
     const res = await axios.get("/api/faculties");
@@ -36,7 +34,6 @@ async function fetchFaculties() {
   }
 }
 
-// 🔄 Відкрити / закрити форму
 function toggleForm(course = null) {
   if (course) {
     editingCourse.value = course;
@@ -50,7 +47,6 @@ function toggleForm(course = null) {
   showForm.value = !showForm.value;
 }
 
-// ➕ Додати курс
 async function createCourse() {
   try {
     await axios.post("/api/admin/courses", form);
@@ -63,7 +59,6 @@ async function createCourse() {
   }
 }
 
-// ✏️ Оновити курс
 async function updateCourse() {
   try {
     await axios.put(`/api/admin/courses/${editingCourse.value.id}`, form);
@@ -76,7 +71,6 @@ async function updateCourse() {
   }
 }
 
-// 🗑️ Видалити курс
 async function deleteCourse(id) {
   if (!confirm("Ви впевнені, що хочете видалити цей курс?")) return;
   try {
@@ -143,7 +137,6 @@ onMounted(async () => {
       </tbody>
     </table>
 
-    <!-- 🧾 Форма додавання / редагування -->
     <transition name="fade">
       <div
         v-if="showForm"

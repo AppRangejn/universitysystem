@@ -11,20 +11,17 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    // 🧾 Вивести всіх користувачів
     public function index()
     {
         return response()->json(User::with('group')->get());
     }
 
-    // 👁️ Переглянути конкретного користувача
     public function show($id)
     {
         $user = User::with('group')->findOrFail($id);
         return response()->json($user);
     }
 
-    // ➕ Створити користувача
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -41,7 +38,6 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
-    // ✏️ Оновити користувача
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -62,7 +58,6 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    // ❌ Видалити користувача
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -70,7 +65,6 @@ class UserController extends Controller
         return response()->json(['message' => 'Користувача видалено']);
     }
 
-    // 🧑‍🎓 Оновлення профілю користувача
     public function updateProfile(Request $request)
     {
         $user = $request->user();
@@ -84,13 +78,11 @@ class UserController extends Controller
             'photo' => $request->hasFile('photo') ? 'image|max:2048' : 'nullable',
         ]);
 
-        // 🖼 Фото змінюємо лише якщо завантажене
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('photos', 'public');
             $validated['photo'] = $path;
         }
 
-        // 🧠 Оновлюємо лише передані поля
         foreach ($validated as $key => $value) {
             if ($value !== null && $value !== '') {
                 $user->$key = $value;
@@ -106,7 +98,6 @@ class UserController extends Controller
         ]);
     }
 
-    // 🔑 Зміна пароля
     public function changePassword(Request $request)
     {
         $request->validate([
@@ -126,7 +117,6 @@ class UserController extends Controller
         return response()->json(['message' => 'Пароль успішно змінено']);
     }
 
-    // 🏫 Призначити студенту групу
     public function assignGroup(Request $request, User $user)
     {
         $request->validate([

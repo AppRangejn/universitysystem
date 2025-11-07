@@ -1,28 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-// 🧱 Layouts
 import MainLayout from "@/layouts/MainLayout.vue";
 import AdminLayout from "@/layouts/AdminLayout.vue";
 
-// 🏠 Головна
 import HomePage from "@/pages/HomePage.vue";
 
-// 📅 Розклад
 import SchedulePage from "@/pages/Schedule/SchedulePage.vue";
 import StudentSchedule from "@/pages/Schedule/StudentSchedule.vue";
 import TeacherSchedule from "@/pages/Schedule/TeacherSchedule.vue";
 import AdminSchedule from "@/pages/Schedule/AdminSchedule.vue";
 import GroupSchedulePage from "@/pages/Schedule/GroupSchedulePage.vue";
 
-// 👤 Профіль
 import ProfilePage from "@/pages/Profile/ProfilePage.vue";
 
-// 🔐 Авторизація
 import LoginPage from "@/pages/Auth/LoginPage.vue";
 import RegisterPage from "@/pages/Auth/RegisterPage.vue";
 
 const routes = [
-  // --- Основний layout ---
   {
     path: "/",
     component: MainLayout,
@@ -73,7 +67,6 @@ const routes = [
     ],
   },
 
-  // --- ⚙️ Адмін layout ---
   {
     path: "/admin",
     component: AdminLayout,
@@ -130,7 +123,6 @@ const routes = [
     ],
   },
 
-  // --- Авторизація ---
   {
     path: "/login",
     name: "login",
@@ -144,7 +136,6 @@ const routes = [
     meta: { title: "Реєстрація — GitHub Університет" },
   },
 
-  // --- 404 ---
   {
     path: "/:pathMatch(.*)*",
     redirect: "/",
@@ -159,7 +150,6 @@ const router = createRouter({
   },
 });
 
-// 🧭 Захист для адмінських маршрутів
 router.beforeEach((to, from, next) => {
   const userRole = localStorage.getItem("userRole");
 
@@ -170,7 +160,6 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-// 🧠 Динамічна зміна заголовка сторінки
 router.afterEach((to) => {
   document.title = to.meta.title || "GitHub Університет";
 });

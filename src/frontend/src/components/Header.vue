@@ -8,7 +8,6 @@
     ]"
   >
     <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 transition-all duration-300">
-      <!-- 🧠 Логотип -->
       <div
         class="flex items-center gap-3 cursor-pointer select-none transition-all duration-300"
         @click="goHome"
@@ -26,7 +25,6 @@
         </span>
       </div>
 
-      <!-- ☰ Кнопка меню для мобільних -->
       <button
         @click="isMenuOpen = !isMenuOpen"
         class="sm:hidden text-3xl focus:outline-none transition-all duration-300"
@@ -36,9 +34,7 @@
         <span v-else>✕</span>
       </button>
 
-      <!-- 🌐 Навігація -->
       <nav class="hidden sm:flex items-center gap-8 font-semibold transition-all duration-300">
-        <!-- 🔹 Розклад -->
         <RouterLink
           to="/schedules"
           class="transition-all duration-300"
@@ -47,7 +43,6 @@
           Розклад
         </RouterLink>
 
-        <!-- 🔹 Особистий кабінет або Гостьовий доступ -->
         <RouterLink
           v-if="auth.user"
           to="/profile"
@@ -66,7 +61,6 @@
           Гостьовий доступ
         </RouterLink>
 
-        <!-- 🔹 Авторизація / Вихід -->
         <template v-if="auth.user">
           <button
             @click="logout"
@@ -103,7 +97,6 @@
       </nav>
     </div>
 
-    <!-- 📱 Мобільне меню -->
     <transition name="slide-fade">
       <div
         v-if="isMenuOpen"
@@ -184,11 +177,11 @@ import lightLogo from "@/assets/logo.svg";
 import darkLogo from "@/assets/logo-dark.svg";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useAuthStore } from "@/stores/useAuth"; // ✅ Підключаємо Pinia
+import { useAuthStore } from "@/stores/useAuth";
 
 const router = useRouter();
 const route = useRoute();
-const auth = useAuthStore(); // ✅ Використовуємо стан авторизації
+const auth = useAuthStore();
 
 const isScrolled = ref(false);
 const isMenuOpen = ref(false);
@@ -211,7 +204,6 @@ const logout = async () => {
   router.push("/");
 };
 
-// 🧠 Динамічні класи для посилань (активне / звичайне / скрол)
 const linkClasses = (name, isMobile = false) => {
   const active = route.name === name;
   const base = "transition-colors duration-300";

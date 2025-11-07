@@ -1,6 +1,5 @@
 <template>
   <div class="mt-10 bg-white rounded-2xl shadow-xl border border-blue-200 overflow-hidden">
-    <!-- 🔹 Верхня шапка -->
     <div class="bg-blue-700 text-white py-6 text-center border-b-4 border-blue-500">
       <h2 class="text-3xl font-bold uppercase tracking-wide">
         Розклад групи {{ groupName || "..." }}
@@ -8,7 +7,6 @@
       <p class="text-lg font-semibold mt-1">Тиждень 1</p>
     </div>
 
-    <!-- 🔄 Завантаження -->
     <div v-if="loading" class="text-center py-10 text-gray-500 text-lg">
       Завантаження...
     </div>
@@ -17,7 +15,6 @@
       Розклад відсутній 😔
     </div>
 
-    <!-- 📅 Таблиця -->
     <div v-else class="overflow-x-auto">
       <table class="w-full text-center border-collapse">
         <thead class="bg-blue-100 text-blue-900 border-b border-blue-300">
@@ -108,15 +105,12 @@ onMounted(async () => {
   try {
     const groupId = route.params.id;
 
-    // 🧩 Назва групи
     const groupRes = await axios.get(`/api/groups/${groupId}`);
     groupName.value = groupRes.data.name;
 
-    // ⚙️ Отримати налаштування розкладу
     const settingsRes = await axios.get("/api/admin/settings/schedule");
     const settings = settingsRes.data;
 
-    // Записати дні та кількість пар
     days.value =
       Array.isArray(settings.days) && settings.days.length
         ? settings.days
@@ -127,7 +121,6 @@ onMounted(async () => {
       (_, i) => i + 1
     );
 
-    // 📅 Отримати розклад
     const scheduleRes = await axios.get(`/api/schedules?group_id=${groupId}`);
     schedules.value = scheduleRes.data;
   } catch (err) {

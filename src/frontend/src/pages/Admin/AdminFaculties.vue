@@ -11,7 +11,6 @@ const form = reactive({
   name: "",
 });
 
-// 📋 Отримати всі факультети
 async function fetchFaculties() {
   loading.value = true;
   try {
@@ -24,7 +23,6 @@ async function fetchFaculties() {
   }
 }
 
-// 🔄 Відкрити / закрити форму
 function toggleForm(faculty = null) {
   if (faculty) {
     editingFaculty.value = faculty;
@@ -36,7 +34,6 @@ function toggleForm(faculty = null) {
   showForm.value = !showForm.value;
 }
 
-// ➕ Додати факультет
 async function createFaculty() {
   try {
     await axios.post("/api/admin/faculties", form);
@@ -49,7 +46,6 @@ async function createFaculty() {
   }
 }
 
-// ✏️ Оновити факультет
 async function updateFaculty() {
   try {
     await axios.put(`/api/admin/faculties/${editingFaculty.value.id}`, form);
@@ -62,7 +58,6 @@ async function updateFaculty() {
   }
 }
 
-// 🗑️ Видалити факультет
 async function deleteFaculty(id) {
   if (!confirm("Ви впевнені, що хочете видалити цей факультет?")) return;
   try {
@@ -124,7 +119,6 @@ onMounted(fetchFaculties);
       </tbody>
     </table>
 
-    <!-- 🧾 Модальне вікно -->
     <transition name="fade">
       <div
         v-if="showForm"

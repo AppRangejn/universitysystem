@@ -6,14 +6,12 @@ const loading = ref(true);
 const settings = ref({ days: [], pair_count: 6 });
 const newDay = ref("");
 
-// 🧾 Отримати поточні налаштування
 async function fetchSettings() {
   try {
     const res = await axios.get("/api/admin/settings/schedule");
     settings.value = res.data;
   } catch (err) {
     console.error("❌ Помилка при отриманні налаштувань:", err);
-    // fallback щоб сторінка не зависала
     settings.value = {
       days: ["Понеділок", "Вівторок", "Середа", "Четвер", "П’ятниця"],
       pair_count: 6,
@@ -23,7 +21,6 @@ async function fetchSettings() {
   }
 }
 
-// 💾 Зберегти всі зміни вручну (для кнопки)
 async function saveSettings() {
   try {
     await axios.put("/api/admin/settings/schedule", settings.value);
@@ -34,7 +31,6 @@ async function saveSettings() {
   }
 }
 
-// ➕ Додати день тижня
 async function addDay() {
   if (newDay.value.trim()) {
     settings.value.days.push(newDay.value.trim());
@@ -48,7 +44,6 @@ async function addDay() {
   }
 }
 
-// ❌ Видалити день тижня
 async function removeDay(day) {
   settings.value.days = settings.value.days.filter(d => d !== day);
   try {
@@ -74,13 +69,11 @@ onMounted(fetchSettings);
       v-else
       class="bg-white p-6 rounded-xl shadow-lg space-y-6 border border-blue-100"
     >
-      <!-- 🗓️ Дні тижня -->
       <div>
         <h2 class="text-xl font-semibold mb-2 text-blue-700">
           Дні тижня
         </h2>
 
-        <!-- Список днів -->
         <div class="flex flex-wrap gap-2 mb-3">
           <span
             v-for="day in settings.days"
@@ -98,7 +91,6 @@ onMounted(fetchSettings);
           </span>
         </div>
 
-        <!-- Додавання нового дня -->
         <div class="flex gap-3">
           <input
             v-model="newDay"
@@ -114,7 +106,6 @@ onMounted(fetchSettings);
         </div>
       </div>
 
-      <!-- 🔢 Кількість пар -->
       <div>
         <h2 class="text-xl font-semibold mb-2 text-blue-700">
           Кількість пар на день
@@ -128,7 +119,6 @@ onMounted(fetchSettings);
         />
       </div>
 
-      <!-- 💾 Кнопка збереження -->
       <div class="flex justify-end pt-4">
         <button
           @click="saveSettings"

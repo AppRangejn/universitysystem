@@ -8,12 +8,11 @@ use Illuminate\Http\Request;
 
 class ScheduleSettingController extends Controller
 {
-    // 🧾 Отримати поточні налаштування
+
     public function index()
     {
         $settings = ScheduleSetting::first();
 
-        // Якщо ще не створено — створюємо стандартні
         if (!$settings) {
             $settings = ScheduleSetting::create([
                 'days' => ['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П’ятниця', 'Субота', 'Неділя'],
@@ -24,7 +23,6 @@ class ScheduleSettingController extends Controller
         return response()->json($settings);
     }
 
-    // 💾 Оновити налаштування
     public function update(Request $request)
     {
         $validated = $request->validate([

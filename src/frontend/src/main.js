@@ -1,7 +1,7 @@
 import './assets/main.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import { useAuthStore } from '@/stores/useAuth'; // ✅ правильна назва
+import { useAuthStore } from '@/stores/useAuth';
 
 import App from './App.vue';
 import router from './router';
@@ -12,7 +12,6 @@ const pinia = createPinia();
 app.use(pinia);
 app.use(router);
 
-// 🧠 Відновлення сесії перед рендером
 const auth = useAuthStore();
 await auth.restoreSession();
 

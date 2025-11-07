@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class FacultyController extends Controller
 {
-    // 📚 Всі факультети з курсами та групами
+
     public function index()
     {
         return response()->json(
@@ -16,7 +16,7 @@ class FacultyController extends Controller
         );
     }
 
-    // 👁️ Один факультет з повною структурою
+
     public function show(Faculty $faculty)
     {
         return response()->json(
@@ -24,7 +24,7 @@ class FacultyController extends Controller
         );
     }
 
-    // ➕ Створити факультет
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -35,7 +35,7 @@ class FacultyController extends Controller
         return response()->json($faculty, 201);
     }
 
-    // ✏️ Оновити факультет
+
     public function update(Request $request, Faculty $faculty)
     {
         $validated = $request->validate([
@@ -46,7 +46,7 @@ class FacultyController extends Controller
         return response()->json($faculty);
     }
 
-    // ❌ Видалити факультет
+
     public function destroy(Faculty $faculty)
     {
         $faculty->delete();

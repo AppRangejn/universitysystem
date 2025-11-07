@@ -30,7 +30,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // 🔐 Перевірка ролей
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

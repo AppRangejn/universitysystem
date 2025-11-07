@@ -6,7 +6,6 @@
       </h1>
       <p class="text-xl text-gray-700 mb-10">Розклад академічних груп</p>
 
-      <!-- 📘 Список факультетів -->
       <div v-for="faculty in faculties" :key="faculty.id" class="mb-5 bg-blue-100 rounded-xl overflow-hidden shadow-md">
         <button
           class="w-full flex justify-between items-center text-left px-5 py-4 text-lg font-semibold text-blue-900 hover:bg-blue-200 transition"
@@ -16,7 +15,6 @@
           <span :class="openFaculty === faculty.id ? 'rotate-180' : ''" class="transition-transform">▼</span>
         </button>
 
-        <!-- 📚 Курси -->
         <transition name="fade">
           <div v-if="openFaculty === faculty.id" class="bg-white px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-4 border-t">
             <div

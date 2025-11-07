@@ -92,7 +92,6 @@ const submitRegister = async () => {
   await auth.register(form);
 };
 
-// 🧭 автоматичний редирект після створення акаунта
 watch(
   () => auth.user,
   (user) => {

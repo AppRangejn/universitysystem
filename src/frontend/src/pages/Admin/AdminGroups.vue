@@ -13,7 +13,6 @@ const form = reactive({
   course_id: "",
 });
 
-// 🧠 Отримати всі групи
 async function fetchGroups() {
   loading.value = true;
   try {
@@ -26,7 +25,6 @@ async function fetchGroups() {
   }
 }
 
-// 🎓 Отримати курси для select
 async function fetchCourses() {
   try {
     const res = await axios.get("/api/courses");
@@ -36,7 +34,6 @@ async function fetchCourses() {
   }
 }
 
-// 🧾 Відкрити/закрити форму
 function toggleForm(group = null) {
   if (group) {
     editingGroup.value = group;
@@ -50,7 +47,6 @@ function toggleForm(group = null) {
   showForm.value = !showForm.value;
 }
 
-// ➕ Додати
 async function createGroup() {
   try {
     await axios.post("/api/admin/groups", form);
@@ -63,7 +59,6 @@ async function createGroup() {
   }
 }
 
-// ✏️ Оновити
 async function updateGroup() {
   try {
     await axios.put(`/api/admin/groups/${editingGroup.value.id}`, form);
@@ -76,7 +71,6 @@ async function updateGroup() {
   }
 }
 
-// 🗑️ Видалити
 async function deleteGroup(id) {
   if (!confirm("Ви впевнені, що хочете видалити цю групу?")) return;
   try {
@@ -143,7 +137,6 @@ onMounted(async () => {
       </tbody>
     </table>
 
-    <!-- 🧩 Модалка -->
     <transition name="fade">
       <div
         v-if="showForm"

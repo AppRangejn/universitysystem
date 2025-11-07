@@ -10,10 +10,10 @@ export default defineConfig({
     },
   },
   server: {
-    host: true, // 👈 дозволяє працювати в Docker
+    host: true,
     port: 5173,
     watch: {
-      usePolling: true, // 👈 для live reload у контейнері
+      usePolling: true,
     },
   },
 });

@@ -2,17 +2,14 @@
   <div
     class="relative min-h-screen flex flex-col justify-center items-center text-white bg-gradient-to-br from-[#004AAD] via-[#005ECB] to-[#003B8E] overflow-hidden"
   >
-    <!-- 🔵 Фонові ореоли -->
     <div class="absolute inset-0 overflow-hidden">
       <div class="absolute w-[400px] h-[400px] bg-blue-400/20 blur-[150px] top-[-100px] left-[-150px] rounded-full animate-pulse"></div>
       <div class="absolute w-[350px] h-[350px] bg-blue-200/10 blur-[160px] bottom-[-100px] right-[-150px] rounded-full animate-pulse delay-500"></div>
     </div>
 
-    <!-- 🏫 Основна секція -->
     <div
       class="relative z-10 text-center w-[90%] max-w-3xl bg-white/10 backdrop-blur-2xl p-10 md:p-14 rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.4)] border border-white/20"
     >
-      <!-- 🎓 Логотип -->
       <div class="flex flex-col items-center mb-8">
         <img
           src="https://pngimg.com/uploads/github/github_PNG20.png"
@@ -27,7 +24,6 @@
         </p>
       </div>
 
-      <!-- 🔹 Вкладки -->
       <div
         class="flex flex-wrap justify-center gap-3 sm:gap-5 mb-10 bg-white/10 p-3 rounded-full backdrop-blur-xl border border-white/20"
       >
@@ -46,7 +42,6 @@
         </button>
       </div>
 
-      <!-- 📘 Контент -->
       <transition name="fade" mode="out-in">
         <div v-if="activeTab === 'schedule'" key="schedule" class="text-lg">
           <p class="mb-6 text-blue-100">
@@ -94,7 +89,6 @@ const tabs = [
 
 const activeTab = ref("schedule");
 
-// 🚀 Натискання на кнопку "Перейти"
 const goTo = (target) => {
   if (target === "schedule") {
     router.push("/schedules");
@@ -131,7 +125,6 @@ const goTo = (target) => {
   opacity: 0;
 }
 
-/* 📱 Адаптив */
 @media (max-width: 640px) {
   .rounded-3xl {
     border-radius: 1.5rem;

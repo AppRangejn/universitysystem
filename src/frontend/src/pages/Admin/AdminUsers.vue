@@ -33,7 +33,6 @@
       </div>
     </div>
 
-    <!-- 📋 Таблиця користувачів -->
     <div v-if="loading">Завантаження...</div>
 
     <table
@@ -95,7 +94,6 @@
       </tbody>
     </table>
 
-    <!-- 🧾 Форма додавання / редагування -->
     <transition name="fade">
       <div
         v-if="showForm"
@@ -191,7 +189,6 @@ const form = reactive({
   role: "student",
 });
 
-// 📦 Отримати користувачів і групи
 async function fetchUsers() {
   loading.value = true;
   try {
@@ -217,7 +214,6 @@ onMounted(async () => {
   await Promise.all([fetchUsers(), fetchGroups()]);
 });
 
-// 🔍 Фільтрація + сортування + пошук
 const filteredUsers = computed(() => {
   let list = [...users.value];
 
@@ -244,7 +240,6 @@ const filteredUsers = computed(() => {
   return list;
 });
 
-// 🧩 Призначення групи
 async function assignGroup(user) {
   try {
     await axios.post(`/api/users/${user.id}/assign-group`, { group_id: user.group_id });
@@ -255,7 +250,6 @@ async function assignGroup(user) {
   }
 }
 
-// ➕ Створення
 async function createUser() {
   try {
     await axios.post("/api/admin/users", form);
@@ -268,7 +262,6 @@ async function createUser() {
   }
 }
 
-// ✏️ Оновлення
 async function updateUser() {
   try {
     await axios.put(`/api/admin/users/${editingUser.value.id}`, form);
@@ -281,7 +274,6 @@ async function updateUser() {
   }
 }
 
-// 🗑️ Видалення
 async function deleteUser(id) {
   if (!confirm("Ви впевнені, що хочете видалити користувача?")) return;
   try {

@@ -11,13 +11,11 @@
         </p>
       </div>
 
-      <!-- 🔄 Завантаження -->
       <div v-if="loading" class="text-center py-16 text-gray-500 text-lg">
         Завантаження профілю...
       </div>
 
       <div v-else class="p-8 space-y-10">
-        <!-- 🧑‍🎓 Фото та базова інформація -->
         <div class="flex flex-col md:flex-row items-center gap-8">
           <div class="relative">
             <img
@@ -83,7 +81,6 @@
           </div>
         </div>
 
-        <!-- ✏️ Редагування профілю -->
         <section class="pt-6 border-t border-blue-200">
           <h2 class="text-2xl font-bold text-blue-800 border-l-4 border-blue-500 pl-3 mb-6">
             Редагування профілю
@@ -126,7 +123,6 @@
           </form>
         </section>
 
-        <!-- 🔐 Зміна пароля -->
         <section class="pt-6 border-t border-blue-200">
           <h2 class="text-2xl font-bold text-blue-800 border-l-4 border-blue-500 pl-3 mb-6">
             Зміна пароля
@@ -204,7 +200,6 @@ const photoUrl = computed(() =>
 );
 
 
-// ✅ отримуємо користувача разом із групою
 const fetchUser = async () => {
   try {
     const res = await axios.get("/api/user");
@@ -217,18 +212,15 @@ const fetchUser = async () => {
   }
 };
 
-// ✅ оновлення профілю з гнучкою логікою
 const updateProfile = async () => {
   const fd = new FormData();
 
-  // Додаємо тільки ті поля, які реально заповнені / змінені
   for (const [key, value] of Object.entries(form.value)) {
     if (value !== null && value !== undefined && value !== "") {
       fd.append(key, value);
     }
   }
 
-  // Якщо вибрали нове фото — додаємо
   if (photoFile.value) {
     fd.append("photo", photoFile.value);
   }
@@ -238,7 +230,7 @@ const updateProfile = async () => {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    user.value = res.data.user; // бек повертає одразу з group
+    user.value = res.data.user;
     alert("✅ Профіль успішно оновлено!");
   } catch (err) {
     console.error("Помилка при оновленні профілю:", err);
@@ -246,19 +238,16 @@ const updateProfile = async () => {
   }
 };
 
-// ✅ зміна пароля
 const changePassword = async () => {
   await axios.post("/api/user/change-password", passwordForm.value);
   alert("🔑 Пароль змінено!");
   passwordForm.value = { current_password: "", new_password: "", new_password_confirmation: "" };
 };
 
-// ✅ обробка фото
 const onFileChange = (e) => {
   photoFile.value = e.target.files[0];
 };
 
-// ✅ перехід на розклад групи
 const goToSchedule = () => {
   if (user.value.group) {
     router.push(`/schedule/group/${user.value.group.id}`);

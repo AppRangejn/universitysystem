@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-    /**
-     * 📋 Отримати всі розклади або за конкретною групою
-     */
     public function index(Request $request)
     {
         $query = Schedule::with('group.course.faculty');
@@ -28,18 +25,12 @@ class ScheduleController extends Controller
         return response()->json($query->orderBy('day')->orderBy('time')->get());
     }
 
-    /**
-     * 👁️ Один запис розкладу
-     */
     public function show($id)
     {
         $schedule = Schedule::with('group.course.faculty')->findOrFail($id);
         return response()->json($schedule);
     }
 
-    /**
-     * ➕ Створити новий розклад
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -64,7 +55,7 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'group_id' => 'sometimes|exists:groups,id',
             'day' => 'sometimes|string|max:50',
-            'pair_number' => 'sometimes|integer|min:1|max:8', // ✅ нове
+            'pair_number' => 'sometimes|integer|min:1|max:8',
             'time' => 'sometimes|string|max:50',
             'subject' => 'sometimes|string|max:255',
             'room' => 'nullable|string|max:100',
@@ -77,9 +68,6 @@ class ScheduleController extends Controller
     }
 
 
-    /**
-     * ❌ Видалити запис розкладу
-     */
     public function destroy($id)
     {
         $schedule = Schedule::findOrFail($id);

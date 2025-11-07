@@ -66,7 +66,6 @@ const submitLogin = async () => {
   await auth.login(form);
 };
 
-// 🔁 якщо користувач авторизований — одразу редирект
 watch(
   () => auth.user,
   (user) => {

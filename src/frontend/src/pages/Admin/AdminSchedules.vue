@@ -4,7 +4,7 @@ import axios from "axios";
 
 const schedules = ref([]);
 const groups = ref([]);
-const settings = ref({ days: [], pair_count: 6 }); // ✅ запасні дефолти
+const settings = ref({ days: [], pair_count: 6 });
 const loading = ref(true);
 const showForm = ref(false);
 const editingSchedule = ref(null);
@@ -20,7 +20,7 @@ const form = reactive({
   week: "",
 });
 
-// 🧾 Отримати всі розклади
+
 async function fetchSchedules() {
   loading.value = true;
   try {
@@ -33,7 +33,7 @@ async function fetchSchedules() {
   }
 }
 
-// 🎓 Отримати групи для select
+
 async function fetchGroups() {
   try {
     const res = await axios.get("/api/groups");
@@ -43,15 +43,13 @@ async function fetchGroups() {
   }
 }
 
-// ⚙️ Отримати налаштування (дні, кількість пар)
+
 async function fetchSettings() {
   try {
-    // ✅ важливо — правильний маршрут із "admin"
     const res = await axios.get("/api/admin/settings/schedule");
     settings.value = res.data;
   } catch (err) {
     console.error("❌ Помилка при отриманні налаштувань розкладу:", err);
-    // fallback, щоб форма все одно працювала
     settings.value = {
       days: ["Понеділок", "Вівторок", "Середа", "Четвер", "П’ятниця"],
       pair_count: 6,
@@ -59,7 +57,6 @@ async function fetchSettings() {
   }
 }
 
-// 🔄 Відкрити / закрити форму
 function toggleForm(schedule = null) {
   if (schedule) {
     editingSchedule.value = schedule;
@@ -71,7 +68,7 @@ function toggleForm(schedule = null) {
   showForm.value = !showForm.value;
 }
 
-// ➕ Додати розклад
+
 async function createSchedule() {
   try {
     await axios.post("/api/admin/schedules", form);
@@ -84,7 +81,7 @@ async function createSchedule() {
   }
 }
 
-// ✏️ Оновити розклад
+
 async function updateSchedule() {
   try {
     await axios.put(`/api/admin/schedules/${editingSchedule.value.id}`, form);
@@ -97,7 +94,7 @@ async function updateSchedule() {
   }
 }
 
-// 🗑️ Видалити розклад
+
 async function deleteSchedule(id) {
   if (!confirm("Ви впевнені, що хочете видалити цей розклад?")) return;
   try {
@@ -169,7 +166,6 @@ onMounted(async () => {
       </tbody>
     </table>
 
-    <!-- 🧾 Модальне вікно -->
     <transition name="fade">
       <div
         v-if="showForm"
@@ -184,7 +180,6 @@ onMounted(async () => {
             @submit.prevent="editingSchedule ? updateSchedule() : createSchedule()"
             class="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            <!-- 🎓 Група -->
             <select
               v-model="form.group_id"
               required
@@ -196,7 +191,6 @@ onMounted(async () => {
               </option>
             </select>
 
-            <!-- 📅 День -->
             <select
               v-model="form.day"
               required
@@ -208,7 +202,6 @@ onMounted(async () => {
               </option>
             </select>
 
-            <!-- 🔢 Номер пари -->
             <select
               v-model="form.pair_number"
               required
@@ -220,7 +213,6 @@ onMounted(async () => {
               </option>
             </select>
 
-            <!-- ⏰ Час -->
             <input
               v-model="form.time"
               type="text"
@@ -229,7 +221,6 @@ onMounted(async () => {
               class="border rounded-lg px-3 py-2 w-full"
             />
 
-            <!-- 📚 Предмет -->
             <input
               v-model="form.subject"
               type="text"
@@ -238,7 +229,6 @@ onMounted(async () => {
               class="border rounded-lg px-3 py-2 w-full"
             />
 
-            <!-- 🏫 Аудиторія -->
             <input
               v-model="form.room"
               type="text"
@@ -246,7 +236,6 @@ onMounted(async () => {
               class="border rounded-lg px-3 py-2 w-full"
             />
 
-            <!-- 👨‍🏫 Викладач -->
             <input
               v-model="form.teacher"
               type="text"
@@ -254,7 +243,6 @@ onMounted(async () => {
               class="border rounded-lg px-3 py-2 w-full"
             />
 
-            <!-- 🔁 Тиждень -->
             <input
               v-model="form.week"
               type="text"
@@ -262,7 +250,6 @@ onMounted(async () => {
               class="border rounded-lg px-3 py-2 w-full"
             />
 
-            <!-- ⚙️ Кнопки -->
             <div class="col-span-2 flex justify-end space-x-3 pt-3">
               <button
                 type="button"

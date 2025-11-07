@@ -1,14 +1,11 @@
 <template>
   <div class="flex flex-col min-h-screen bg-gray-50 text-gray-800 relative">
-    <!-- 🔝 Хедер -->
     <Header />
 
-    <!-- 🧠 Основний контент -->
     <main class="flex-grow pt-20">
       <RouterView />
     </main>
 
-    <!-- ⚙️ Плаваюча кнопка адмін панелі -->
     <transition name="fade-scale">
       <router-link
         v-if="userRole === 'admin' && isVisible"
@@ -40,7 +37,6 @@
       </router-link>
     </transition>
 
-    <!-- 🔻 Футер -->
     <Footer />
   </div>
 </template>

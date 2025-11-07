@@ -1,6 +1,5 @@
 <template>
   <div class="flex h-screen bg-gray-100 text-gray-900">
-    <!-- 🧭 Бокове меню -->
     <aside class="w-64 bg-blue-800 text-white flex flex-col shadow-lg">
       <div class="p-5 font-bold text-xl border-b border-blue-600 flex items-center gap-2">
         ⚙️ <span>Адмін панель</span>
@@ -58,7 +57,6 @@
       </div>
     </aside>
 
-    <!-- 🧠 Контент -->
     <main class="flex-grow overflow-y-auto p-8 bg-gray-50">
       <RouterView />
     </main>

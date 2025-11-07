@@ -8,20 +8,20 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    // 📋 Усі курси
+
     public function index()
     {
         return response()->json(Course::with('faculty')->get());
     }
 
-    // 👁️ Один курс
+
     public function show($id)
     {
         $course = Course::with('faculty')->findOrFail($id);
         return response()->json($course);
     }
 
-    // ➕ Створити курс
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -33,7 +33,7 @@ class CourseController extends Controller
         return response()->json($course, 201);
     }
 
-    // ✏️ Оновити курс
+
     public function update(Request $request, $id)
     {
         $course = Course::findOrFail($id);
@@ -47,7 +47,7 @@ class CourseController extends Controller
         return response()->json($course);
     }
 
-    // ❌ Видалити курс
+
     public function destroy($id)
     {
         $course = Course::findOrFail($id);
