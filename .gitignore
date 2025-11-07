@@ -1,60 +1,44 @@
-# ===========================================
-# Laravel (Backend)
-# ===========================================
-/src/backend/vendor
-/src/backend/node_modules
-/src/backend/public/storage
+/src/backend/vendor/
+/src/backend/node_modules/
+/src/backend/public/storage/
 /src/backend/storage/*.key
-/src/backend/storage/logs/*
+/src/backend/storage/logs/
+/src/backend/storage/framework/cache/data/
+/src/backend/storage/framework/sessions/
+/src/backend/storage/framework/views/
+/src/backend/bootstrap/cache/*.php
+!/src/backend/bootstrap/cache/.gitignore
+
 /src/backend/.env
-/src/backend/.env.backup
+/src/backend/.env.*
 /src/backend/.phpunit.result.cache
 /src/backend/Homestead.yaml
 /src/backend/Homestead.json
 
-# Laravel cache
-/src/backend/bootstrap/cache/*.php
-!/src/backend/bootstrap/cache/.gitignore
-
-# ===========================================
-# Vue (Frontend)
-# ===========================================
-/src/frontend/node_modules
-/src/frontend/dist
+/src/frontend/node_modules/
+/src/frontend/dist/
 /src/frontend/.env
-/src/frontend/.env.local
-/src/frontend/.env.development.local
-/src/frontend/.env.production.local
-/src/frontend/.env.test.local
+/src/frontend/.env.*
 
-# ===========================================
-# Docker
-# ===========================================
-/pgdata
+/pgdata/
+/docker-compose.override.yml
 *.log
-docker-compose.override.yml
 
-# ===========================================
-# IDE / System Files
-# ===========================================
+/src/backend/composer.lock
+/src/frontend/package-lock.json
+/src/frontend/pnpm-lock.yaml
+/src/frontend/yarn.lock
+
 .idea/
 .vscode/
 *.iml
 .DS_Store
 Thumbs.db
 
-# ===========================================
-# OS / Cache
-# ===========================================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-package-lock.json
-composer.lock
 
-# ===========================================
-# Miscellaneous
-# ===========================================
 /.env
 /.env.*
